@@ -1,11 +1,29 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Header from "./Header";
+import { checkValidateData } from "../utils/validate";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
   };
+
+  const handleButtonClick = (e) => {
+    e.preventDefault();
+    // Handle form submission
+    const message = checkValidateData(
+      email.current.value,
+      password.current.value
+    );
+    setErrorMessage(message);
+    console.log(message);
+  };
+
   return (
     <div>
       <Header />
@@ -15,12 +33,16 @@ const Login = () => {
           alt="App Logo"
         />
       </div>
-      <form className="w-3/12 absolute p-12 bg-black my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="w-3/12 absolute p-12 bg-black my-36 mx-auto right-0 left-0 text-white rounded-lg bg-opacity-80"
+      >
         <h1 className="font-bold text-3xl py-4">
           {isSignInForm ? "Sign In" : "Sign Up"}
         </h1>
         {!isSignInForm && (
           <input
+            ref={name}
             type="text"
             placeholder="Full Name"
             required
@@ -28,6 +50,7 @@ const Login = () => {
           />
         )}
         <input
+          ref={email}
           type="email"
           placeholder="Email"
           required
@@ -35,14 +58,17 @@ const Login = () => {
         />
 
         <input
+          ref={password}
           type="password"
           placeholder="Password"
           required
           className="p-4 m-4 w-full bg-gray-700"
         />
+        {errorMessage && <p className="text-red-500 m-4">{errorMessage}</p>}
         <button
           type="submit"
           className="bg-red-600 text-white p-4 m-4 w-full rounded-lg"
+          onClick={(event) => handleButtonClick(event)}
         >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
@@ -60,3 +86,6 @@ const Login = () => {
 };
 
 export default Login;
+
+// 1:40:00
+//2:16:00
